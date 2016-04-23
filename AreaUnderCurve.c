@@ -9,13 +9,11 @@
 void areaUnderLine(double *area, long long *limits, double percision) {
   long double position;
 
-  for (position = limits[0]; position + percision < limits[1]; position += percision) {
+  for (position = limits[0]; position + percision <= limits[1]; position += percision) {
 
     (*area) += position * 2 * percision;
 
   }
-  (*area) += position * 2 * (limits[1] - position);
-
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -24,7 +22,7 @@ void areaUnderCurve(long long *calcCounter, double *area, long long *limits, dou
   long double position;
 
   for (position = limits[0]; position + (percision * 2) <= limits[1]; position += percision) {
-    calcCounter++;
+    (*calcCounter)++;
     (*area) += (cos(position) + 10) * percision;
 
   }
@@ -56,6 +54,7 @@ int main(int argc, char **argv) {
   long long sbe = 0;
   double startTime, endTime;
   double area = 0;
+  long long calcCounter = 0;
   MPI_Status status;
 
   MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
@@ -66,7 +65,7 @@ int main(int argc, char **argv) {
   
   if (myid == 0) {//------------------MASTER----------------------------------
     long double totalArea = 0;
-
+    long long totalCalc = 0;
     startTime = MPI_Wtime();
 
     do {
@@ -92,7 +91,9 @@ int main(int argc, char **argv) {
       //RECEIVEING AREAS
       for (sbe = 1; sbe < numprocs; sbe++) {
         MPI_Recv(&area, 1, MPI_DOUBLE, sbe, 1, MPI_COMM_WORLD, &status);
+        MPI_Recv(&calcCounter, 1, MPI_LONG_LONG, sbe, 1, MPI_COMM_WORLD, &status);
         totalArea += area;
+        totalCalc += calcCounter;
       }
       
 
@@ -102,14 +103,16 @@ int main(int argc, char **argv) {
     printf("That took %f seconds\n",endTime - startTime);
     fflush(stdout);
 
-    printf("Total area: %LG \n",totalArea); 
+    printf("Total area: %.10LG \n",totalArea); 
+    fflush(stdout);
+
+    printf("Found with %lld calculations\n\n",totalCalc); 
     fflush(stdout);
 
   } 
   
 
   if (myid != 0) { //------------------SLAVES------------------------------------
-    long long calcCounter = 0;
 
 
     for (z = 0; z < (double)(totalSearch - 2)/packetSize/(numprocs - 1); z++) { 
@@ -119,6 +122,7 @@ int main(int argc, char **argv) {
       areaUnderCurve(&calcCounter, &area, limits, percision);
 
       MPI_Send(&area, 1, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
+      MPI_Send(&calcCounter, 1, MPI_LONG_LONG, 0, 1, MPI_COMM_WORLD);
     }
   }
 

@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
     printf("That took %f seconds\n",endTime - startTime);
     fflush(stdout);
 
-    printf("We found %lld primes\n",totalPrimes);
+    printf("We found %lld primes\n\n",totalPrimes);
     fflush(stdout);
 
     free(primeFound);
