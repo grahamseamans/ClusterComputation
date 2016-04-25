@@ -33,6 +33,22 @@ Button(root, text=" Find the area under a curve ", command=runPrimes).grid(row =
 
 fii = Button(root, text="Quit", command = root.quit).grid(row = 2, column = 2)
 
+def optimizePrimes():
+    y = 2
+    z = 0
+    runTime=[]
+    for x in range (20):
+        from subprocess import call
+        runTime.extend(call(["mpirun -np ", y * x, "primesopt", 10000, y * x]))
+        print runTime[y]
+        y+=1
+        runTime.extend(call(["mpirun -np ", y * x, "primesopt", 10000, y * x]))
+        print runTime[y]
+        y+=1
+Button(root, text = "optimize primefiner", command=optimizePrimes).grid(row = 3, column = 0)
+
+
 root.mainloop()
+
 
 
