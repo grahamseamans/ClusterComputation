@@ -2,34 +2,9 @@
 #include <mpi.h> 
 #include <stdio.h>
 
-//---------------------------------------------------------------------------------------------------
-
-long primeOne(long long *searchArr, long long *limits) {
-  long position = 0;
-  long long j, k;
-
-  for (j = limits[0]; j <= limits[1]; j++) { //SEARCHING FOR PRIMES
-    k = 2;
-    while ((j % k) != 0) {
-      k++;
-    }
-
-    if (j == k) {
-      searchArr[position] = j;
-      position++;
-    }
-  }
-  return position;
-}
-
-//---------------------------------------------------------------------------------------------------
+long primeOne(long long *searchArr, long long *limits);
 
 int main(int argc, char **argv) {
-
-  //-------SETTINGS----------
-  //long long totalSearch = 500000;
-  //long packetSize = 1000;
-  //-------SETTINGS----------
 
   MPI_Init(&argc, &argv);
 
@@ -127,5 +102,25 @@ int main(int argc, char **argv) {
   MPI_Finalize();           /* EXIT MPI */
   return 0;
 }
+
+
+long primeOne(long long *searchArr, long long *limits) {
+  long position = 0;
+  long long j, k;
+
+  for (j = limits[0]; j <= limits[1]; j++) { //SEARCHING FOR PRIMES
+    k = 2;
+    while ((j % k) != 0) {
+      k++;
+    }
+
+    if (j == k) {
+      searchArr[position] = j;
+      position++;
+    }
+  }
+  return position;
+}
+
 
 

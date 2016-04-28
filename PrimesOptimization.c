@@ -2,8 +2,9 @@
 #include <mpi.h> 
 #include <stdio.h>
 
-
 long primeOne(long long *searchArr, long long *limits);
+
+//---------------------------------------------------------------------------
 
 double main(int argc, char **argv) {
 

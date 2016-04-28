@@ -3,40 +3,10 @@
 #include <stdio.h>
 #include <math.h>
 
-
-//---------------------------------------------------------------------------------------------------
-
-void areaUnderLine(double *area, long long *limits, double percision) {
-  long double position;
-
-  for (position = limits[0]; position + percision <= limits[1]; position += percision) {
-
-    (*area) += position * 2 * percision;
-
-  }
-}
-
-//---------------------------------------------------------------------------------------------------
-
-void areaUnderCurve(long long *calcCounter, double *area, long long *limits, double percision) {
-  long double position;
-
-  for (position = limits[0]; position + (percision * 2) <= limits[1]; position += percision) {
-    (*calcCounter)++;
-    (*area) += (cos(position) + 10) * percision;
-
-  }
-}
-
-//---------------------------------------------------------------------------------------------------
+void areaUnderLine(double *area, long long *limits, double percision);
+void areaUnderCurve(long long *calcCounter, double *area, long long *limits, double percision);
 
 int main(int argc, char **argv) {
-
-  //-------SETTINGS---------- 
-  //double percision = 0.00009;
-  //long long totalSearch = 400000;
-  //long packetSize = 10;
-  //-------SETTINGS----------
 
   MPI_Init(&argc, &argv);
 
@@ -128,6 +98,30 @@ int main(int argc, char **argv) {
 
   MPI_Finalize();           /* EXIT MPI */
   return 0;
+}
+
+
+
+void areaUnderLine(double *area, long long *limits, double percision) {
+  long double position;
+
+  for (position = limits[0]; position + percision <= limits[1]; position += percision) {
+
+    (*area) += position * 2 * percision;
+
+  }
+}
+
+
+
+void areaUnderCurve(long long *calcCounter, double *area, long long *limits, double percision) {
+  long double position;
+
+  for (position = limits[0]; position + (percision * 2) <= limits[1]; position += percision) {
+    (*calcCounter)++;
+    (*area) += (cos(position) + 10) * percision;
+
+  }
 }
 
 
